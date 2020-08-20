@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const GET_COUNTRIES = 'GET_COUNTRIES'
-export const GET_RACE_EXCHANGE = 'GET_RACE_EXCHANGE'
+export const GET_RATE_EXCHANGE = 'GET_RATE_EXCHANGE'
 
 export function fetchCountries() {
   // dispatch is a redux-thunk @see src/index.js
@@ -15,19 +15,25 @@ export function fetchCountries() {
 
 export function fetchRateExchange(country) {
   return function (dispatch) {
-    axios.get(`https://api.exchangeratesapi.io/history?start_at=${formatedDate(new Date())}&end_at=${getLastMonth()}&base=USD&symbols=${country.code}`)
+    axios
+      .get(
+        `https://api.exchangeratesapi.io/history?start_at=${getLastMonth()}&end_at=${formatedDate(new Date())}&base=USD&symbols=${country.currencyCode}`
+      )
       .then(axiosResponse => {
-        dispatch({ type: GET_RACE_EXCHANGE, payload: { rates: axiosResponse.data.rates, ...country } })
-      })
-  }
+        dispatch({
+          type: GET_RATE_EXCHANGE,
+          payload: { rates: axiosResponse.data.rates, ...country }
+        });
+      });
+  };
 }
 
 function formatedDate(date) {
-  return date.toISOString(date).split('T')[0]
+  return date.toISOString().split("T")[0];
 }
+
 function getLastMonth() {
-  let now = new Date()
-  // rm one month
-  now.setMonth(now.getMonth() - 1)
-  return formatedDate(now)
+  let now = new Date();
+  now.setMonth(now.getMonth() - 1);
+  return formatedDate(now);
 }

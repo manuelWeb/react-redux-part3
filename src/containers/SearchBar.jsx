@@ -16,7 +16,7 @@ class SearchBar extends Component {
     return (
       <select
         onChange={e => this.onChangeCountry(e)}
-        name="" id="" className="form-control-lg search_bar" >
+        name="" id="" className="form-control-lg search_bar search_bar--arrow" >
         <option value="">Please choose your country</option>
         {this.props.countries.map(c =>
           <option key={c.code} value={c.code}>
